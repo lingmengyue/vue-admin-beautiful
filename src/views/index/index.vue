@@ -15,7 +15,7 @@
                 src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&label=Stars&logo=github"
               />
             </a>
-            {{ noticeList[0].title }}
+            <p v-html="noticeList[0].title"></p>
           </div>
         </el-alert>
       </el-col>
@@ -24,11 +24,7 @@
           <div slot="header">
             <span>访问量</span>
           </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="fwl"
-          />
+          <vab-chart autoresize theme="vab-echarts-theme" :option="fwl" />
           <div class="bottom">
             <span>
               日均访问量:
@@ -51,11 +47,7 @@
           <div slot="header">
             <span>授权数</span>
           </div>
-          <vab-chart
-            :autoresize="true"
-            theme="vab-echarts-theme"
-            :options="sqs"
-          />
+          <vab-chart autoresize theme="vab-echarts-theme" :option="sqs" />
           <div class="bottom">
             <span>
               总授权数:
@@ -102,23 +94,19 @@
           <div class="bottom-btn">
             <el-popover placement="top" width="250" trigger="hover">
               <p>
-                这是一个付费群，谢谢您愿意支持开源，加群获取详细文档，群内提供vue-admin-beautiful-template基础模板
+                请我们喝杯咖啡，付款后联系qq
+                783963206，我们将邀请您加入我们的讨论群，谢谢您愿意支持开源，加群获取文档、及基础模板，群内大佬众多，希望能帮到大家（如情况不允许，请勿勉强）。
               </p>
-              <el-image :src="require('@/assets/ewm.png')"></el-image>
+              <el-image :src="require('@/assets/zfb_kf.jpg')"></el-image>
               <a slot="reference" target="_blank">
-                <el-button type="primary">QQ讨论群</el-button>
+                <el-button type="primary">QQ讨论群、基础版、文档</el-button>
               </a>
             </el-popover>
-            <a @click="handleChangeTheme">
-              <el-button type="danger">修改主题和布局</el-button>
-            </a>
             <a
               target="_blank"
               href="https://github.com/chuzhixin/vue-admin-beautiful"
             >
-              <el-button type="warning">
-                github下载源码点star（实时更新）
-              </el-button>
+              <el-button type="warning">github下载源码点star</el-button>
             </a>
             <a
               target="_blank"
@@ -126,13 +114,16 @@
             >
               <el-button type="warning">码云下载源码点star</el-button>
             </a>
-            <el-popover placement="top" width="250" trigger="hover">
+            <a @click="handleChangeTheme">
+              <el-button type="danger">修改主题和布局</el-button>
+            </a>
+            <!--  <el-popover placement="top" width="250" trigger="hover">
               <p>谢谢您愿意支持开源，加群获取文档，群内提供基础模板</p>
               <el-image :src="require('@/assets/ewm.png')"></el-image>
               <a slot="reference" target="_blank">
                 <el-button type="warning">文档</el-button>
               </a>
-            </el-popover>
+            </el-popover> -->
           </div>
           <table class="table">
             <tr>
@@ -212,6 +203,8 @@
             </el-timeline-item>
           </el-timeline>
         </el-card>
+        <plan></plan>
+        <version-information></version-information>
       </el-col>
     </el-row>
   </div>
@@ -223,10 +216,15 @@
   import { getList } from '@/api/changeLog'
   import { getNoticeList } from '@/api/notice'
   import { getRepos, getStargazers } from '@/api/github'
+  import Plan from './components/Plan'
+  import VersionInformation from './components/VersionInformation'
+
   export default {
     name: 'Index',
     components: {
       VabChart,
+      Plan,
+      VersionInformation,
     },
     data() {
       return {
@@ -460,81 +458,6 @@
                   name: 'author is very cool',
                   value: 9200,
                 },
-              ],
-            },
-          ],
-        },
-        //中国地图
-        zgdt: {
-          title: {
-            text: '2099年全国GDP分布',
-            subtext: '数据来自vue-admin-beautiful杜撰',
-          },
-          tooltip: {
-            trigger: 'item',
-          },
-          dataRange: {
-            orient: 'horizontal',
-            min: 0,
-            max: 55000,
-            text: ['高', '低'],
-            splitNumber: 0,
-          },
-          series: [
-            {
-              name: '2099年全国GDP分布',
-              type: 'map',
-              roam: false,
-              zoom: 1.25,
-              mapType: 'china',
-              mapLocation: {
-                x: 'center',
-              },
-              selectedMode: 'multiple',
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false,
-                  },
-                },
-                emphasis: {
-                  label: {
-                    show: true,
-                  },
-                },
-              },
-              data: [
-                { name: '西藏', value: 605.83 },
-                { name: '青海', value: 1670.44 },
-                { name: '宁夏', value: 2102.21 },
-                { name: '海南', value: 2522.66 },
-                { name: '甘肃', value: 5020.37 },
-                { name: '贵州', value: 5701.84 },
-                { name: '新疆', value: 6610.05 },
-                { name: '云南', value: 8893.12 },
-                { name: '重庆', value: 10011.37 },
-                { name: '吉林', value: 10568.83 },
-                { name: '山西', value: 11237.55 },
-                { name: '天津', value: 11307.28 },
-                { name: '江西', value: 11702.82 },
-                { name: '广西', value: 11720.87 },
-                { name: '陕西', value: 12512.3 },
-                { name: '黑龙江', value: 12582 },
-                { name: '内蒙古', value: 14359.88 },
-                { name: '安徽', value: 15300.65 },
-                { name: '北京', value: 16251.93 },
-                { name: '福建', value: 17560.18 },
-                { name: '上海', value: 19195.69 },
-                { name: '湖北', value: 19632.26 },
-                { name: '湖南', value: 19669.56 },
-                { name: '四川', value: 21026.68 },
-                { name: '辽宁', value: 22226.7 },
-                { name: '河北', value: 24515.76 },
-                { name: '河南', value: 26931.03 },
-                { name: '浙江', value: 32318.85 },
-                { name: '山东', value: 45361.85, selected: true },
-                { name: '江苏', value: 49110.27 },
-                { name: '广东', value: 53210.28 },
               ],
             },
           ],

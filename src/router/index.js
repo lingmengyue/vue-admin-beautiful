@@ -39,7 +39,7 @@ export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: 'index',
+    redirect: '/index',
     children: [
       {
         path: 'index',
@@ -103,12 +103,6 @@ export const asyncRoutes = [
             name: 'AwesomeIcon',
             component: () => import('@/views/vab/icon/index'),
             meta: { title: '常规图标' },
-          },
-          {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: () => import('@/views/vab/icon/remixIcon'),
-            meta: { title: '小清新图标' },
           },
           {
             path: 'colorfulIcon',
@@ -262,8 +256,7 @@ export const asyncRoutes = [
         meta: { title: '错误日志模拟', permissions: ['admin'] },
       },
       {
-        path:
-          'https://github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        path: 'https://github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
         name: 'ExternalLink',
         meta: {
           title: '外链',
@@ -378,23 +371,9 @@ const router = new VueRouter({
   }),
   routes: constantRoutes,
 })
-//注释的地方是允许路由重复点击，如果你觉得框架路由跳转规范太过严格可选择放开
-const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
-    return originalPush.call(this, location, onResolve, onReject)
-  return originalPush.call(this, location).catch((err) => err)
-}
 
 export function resetRouter() {
-  router.matcher = new VueRouter({
-    base: publicPath,
-    mode: routerMode,
-    scrollBehavior: () => ({
-      y: 0,
-    }),
-    routes: constantRoutes,
-  }).matcher
+  location.reload()
 }
 
 export default router
