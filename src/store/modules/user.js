@@ -69,7 +69,9 @@ const actions = {
    * @param {*} userInfo
    */
   async login({ commit }, userInfo) {
+    // 获取login方法返回的data对象
     const { data } = await login(userInfo)
+    console.log(data)
     const accessToken = data[tokenName]
     if (accessToken) {
       commit('setAccessToken', accessToken)

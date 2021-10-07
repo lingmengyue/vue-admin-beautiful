@@ -14,4 +14,5 @@ Object.keys(modules).forEach((key) => {
 })
 export default createStore({
   modules,
+  strict: false,
 })

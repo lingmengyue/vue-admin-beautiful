@@ -55,6 +55,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     if (store.getters['user/accessToken'])
+      // admin-accessToken
       config.headers[tokenName] = store.getters['user/accessToken']
     if (
       config.data &&

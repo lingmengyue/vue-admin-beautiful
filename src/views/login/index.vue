@@ -82,7 +82,7 @@
       },
     },
     mounted() {
-      this.form.username = 'admin'
+      this.form.username = 'lingmeng'
       this.form.password = '123456'
       /*  setTimeout(() => {
         this.handleSubmit()

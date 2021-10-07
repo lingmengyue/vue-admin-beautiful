@@ -77,6 +77,7 @@
         this.fetchData()
       },
       async fetchData() {
+        console.log(this.queryForm)
         const { data, totalCount } = await getIconList(this.queryForm)
         this.queryIcon = data
         this.total = totalCount

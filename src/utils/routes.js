@@ -14,8 +14,9 @@ export function convertRouter(constantRoutes) {
   return constantRoutes.map((route) => {
     if (route.component) {
       if (route.component === 'Layout') {
-        const path = 'layouts'
-        route.component = (resolve) => require([`@/${path}`], resolve)
+        const path = 'layout'
+        route.component = () => Promise.resolve(require(`@/${path}`).default)
+        // debugger
       } else {
         let path = 'views/' + route.component
         if (
@@ -27,10 +28,15 @@ export function convertRouter(constantRoutes) {
           path = 'views' + route.component
         } else if (new RegExp('^@views/.*$').test(route.component)) {
           path = route.component.slice(1)
+        } else if (new RegExp('^@/views/.*$').test(route.component)) {
+          path = route.component.slice(2)
         } else {
           path = 'views/' + route.component
         }
-        route.component = (resolve) => require([`@/${path}`], resolve)
+        // route.component = (res) => require([`@/${path}`], res)
+        // debugger
+        route.component = () => Promise.resolve(require(`@/${path}`).default)
+        // debugger
       }
     }
     if (route.children && route.children.length)

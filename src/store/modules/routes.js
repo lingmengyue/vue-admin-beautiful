@@ -12,11 +12,15 @@ const state = () => ({
 })
 const getters = {
   routes: (state) => state.routes,
+  menuList: (state) => state.menuList,
   partialRoutes: (state) => state.partialRoutes,
 }
 const mutations = {
   setRoutes(state, routes) {
     state.routes = routes
+  },
+  setMenuList(state, routes) {
+    state.menuList = routes
   },
   setPartialRoutes(state, routes) {
     state.partialRoutes = routes
@@ -41,9 +45,12 @@ const actions = {
    * @returns
    */
   async setAllRoutes({ commit }) {
+    // 获取路由数据 mock模式下在路由数据@/mock/controller/router.js
+    // 发起对应接口文件路径在@api/router.js
     let { data } = await getRouterList()
-    if (data[data.length - 1].path !== '*')
-      data.push({ path: '*', redirect: '/404', hidden: true })
+    commit('setMenuList', data)
+    // if (data[data.length - 1].path !== '*')
+    //   data.push({ path: '/*', redirect: '/404', hidden: true })
     const asyncRoutes = convertRouter(data)
     const finallyRoutes = filterRoutes([...constantRoutes, ...asyncRoutes])
     commit('setRoutes', finallyRoutes)

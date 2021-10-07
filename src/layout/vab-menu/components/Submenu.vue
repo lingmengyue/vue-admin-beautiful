@@ -29,5 +29,6 @@
         },
       },
     },
+    methods: {},
   }
 </script>

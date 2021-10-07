@@ -13,8 +13,13 @@ import {
 } from '@/config'
 
 router.beforeEach(async (to, from, next) => {
+  // 未匹配路由自动跳转到404页面
+  // if (to.matched.length == 0) {
+  //   next('/404')
+  // }
+  // 判断本地是否已经存有token
   let hasToken = store.getters['user/accessToken']
-
+  // 是否开启了登录拦截 没开启则直接默认token一直存在
   if (!loginInterception) hasToken = true
 
   if (hasToken) {
@@ -29,6 +34,7 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
+          // 判断是否开始了登录拦截，开启了则去获取登录的用户信息
           if (loginInterception) {
             await store.dispatch('user/getUserInfo')
           } else {
@@ -45,7 +51,6 @@ router.beforeEach(async (to, from, next) => {
           accessRoutes.forEach((item) => {
             router.addRoute(item)
           })
-
           next({ ...to, replace: true })
         } catch {
           await store.dispatch('user/resetAll')
