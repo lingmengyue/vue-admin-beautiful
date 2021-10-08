@@ -4,6 +4,7 @@
       <span class="ant-dropdown-link">
         <a-avatar :src="avatar" />
         {{ username }}
+        <!--头像下拉组件-->
         <DownOutlined />
       </span>
       <template v-slot:overlay>
@@ -16,11 +17,14 @@
 </template>
 
 <script>
+  // 获取recordRoute的状态,布尔值,true:token失效回退到登录页时是否记录本次的路由
   import { recordRoute } from '@/config'
   import { DownOutlined } from '@ant-design/icons-vue'
-
+  // 使用vuex
   import { useStore } from 'vuex'
+  // 使用vue的computed组件
   import { computed } from 'vue'
+  // 调用vue-router的方法
   import { useRoute, useRouter } from 'vue-router'
 
   export default {
@@ -30,7 +34,7 @@
       const store = useStore()
       const router = useRouter()
       const route = useRoute()
-
+      // 用户退出方法
       const logout = async () => {
         await store.dispatch('user/logout')
         if (recordRoute) {

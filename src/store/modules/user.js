@@ -2,34 +2,42 @@
  * @author chuzhixin 1204505056@qq.com
  * @description 登录、获取用户信息、退出登录、清除accessToken逻辑，不建议修改
  */
+// 调用位置在：项目根目录/src/api/user.js文件里面写的这三个方法
 import { getUserInfo, login, logout } from '@/api/user'
+// 调用位置在：项目根目录/src/utils/accessToken.js文件里面写的这三个方法
 import {
   getAccessToken,
   removeAccessToken,
   setAccessToken,
 } from '@/utils/accessToken'
+// 调用位置在：项目根目录/src/config/index.js文件里面配置的标题名与token名
 import { title, tokenName } from '@/config'
+// 调用ant-design-vue的组件
 import { message, notification } from 'ant-design-vue'
 
+// 配置属性
 const state = () => ({
   accessToken: getAccessToken(),
   username: '',
   avatar: '',
 })
+// 设置获取对应属性的方法
 const getters = {
   accessToken: (state) => state.accessToken,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
 }
+// 对属性进行设置的方法，方法名命名规则为：set+对应属性名，例如要对state里面avatar值进行设置，那么方法名为setAvatar
 const mutations = {
   /**
    * @author chuzhixin 1204505056@qq.com
    * @description 设置accessToken
-   * @param {*} state
+   * @param {*} state 设置的属性，对应上面设置的state常量
    * @param {*} accessToken
    */
   setAccessToken(state, accessToken) {
     state.accessToken = accessToken
+    // 此处的setAccessToken调用的是accessToken.js文件中的setAccessToken方法
     setAccessToken(accessToken)
   },
   /**
@@ -64,7 +72,7 @@ const actions = {
   },
   /**
    * @author chuzhixin 1204505056@qq.com
-   * @description 登录
+   * @description 登录方法
    * @param {*} { commit }
    * @param {*} userInfo
    */

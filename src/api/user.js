@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+// 获取设置的token名字，默认为accessToken
 import { tokenName } from '@/config'
 
 export async function login(data) {

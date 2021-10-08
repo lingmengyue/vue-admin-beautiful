@@ -1,3 +1,4 @@
+// 获取设置，storage：token存储位置，默认值为localStorage，tokenTableName：在存储位置的键名，默认值为accessToken
 import { storage, tokenTableName } from '@/config'
 import cookie from 'js-cookie'
 

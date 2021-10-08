@@ -90,7 +90,7 @@
     },
     methods: {
       ...mapActions({
-        login: 'user/login',
+        Login: 'user/login',
       }),
       handleRoute() {
         return this.redirect === '/404' || this.redirect === '/403'
@@ -98,7 +98,7 @@
           : this.redirect
       },
       async handleSubmit() {
-        await this.login(this.form)
+        await this.Login(this.form)
         await this.$router.push(this.handleRoute())
       },
     },
