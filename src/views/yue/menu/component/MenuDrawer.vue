@@ -135,11 +135,9 @@
           .then(() => {
             menuData.meta.icon = formState.meta_icon
             menuData.meta.title = formState.meta_title
-            // 是否是添加动作，true：添加 false: 修改
             if (extraData.add_status) {
-              // 是否是在进行子菜单的添加：true：是 false：添加一级菜单
               if (extraData.subMenuStatus) {
-                menuData.path = formState.path
+                menuData.path = extraData.prefix_url + formState.path
                 menuData.component_name = extraData.prefix_url + formState.path
                 menuData.component =
                   '@/views' + extraData.prefix_url + formState.path

@@ -15,6 +15,14 @@ export async function menuMange(data) {
   })
 }
 
+export async function menuDelete(data) {
+  return request({
+    url: '/auth/menu/menuDelete',
+    method: 'post',
+    data,
+  })
+}
+
 export async function roleList() {
   return request({
     url: '/auth/roleList',

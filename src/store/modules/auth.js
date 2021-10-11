@@ -2,8 +2,7 @@
  * @author wuhuazhen
  * @description 菜单添加与修改
  */
-// import { menuMange } from '@/api/auth'
-
+import { menuMange } from '@/api/auth'
 const state = () => ({
   username: '',
   avatar: '',
@@ -34,15 +33,19 @@ const mutations = {
 }
 
 const actions = {
-  // 菜单数据的添加与修改操作
-  async menuMange(menuData) {
+  async menuMange({ state }, menuData) {
     console.log('menuData', menuData)
-    // const { data } = await menuMange(menuData)
-    // console.log('return data:', data)
+    console.log('state', state)
+    const { data } = await menuMange(menuData)
+    console.log('return data:', data)
+    return 'ok'
   },
-  // 菜单数据的删除
-  async menuDelete({ commit }, menuID) {
-    console.log('commit', commit)
+  /**
+   * 删除菜单
+   * @param menuID 菜单ID
+   * @returns {Promise<void>}
+   */
+  async menuDelete(menuID) {
     console.log('menuID', menuID)
     // const { data } = await menuMange(menuData)
     // console.log('return data:', data)

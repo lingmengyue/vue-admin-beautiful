@@ -91,7 +91,7 @@
   ]
   const menuData = []
   export default {
-    name: 'AdminMangeMenu',
+    name: 'YueMenu',
     components: { VabIcon, MenuDrawer },
     data() {
       return {
