@@ -103,6 +103,7 @@
     },
     computed: {
       ...mapGetters({
+        // 获取菜单列表数据
         routes: 'routes/menuList',
       }),
     },

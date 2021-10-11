@@ -31,7 +31,7 @@ export function getUserInfo(accessToken) {
 
 export function logout() {
   return request({
-    url: '/logout',
+    url: '/auth/logout',
     method: 'post',
   })
 }

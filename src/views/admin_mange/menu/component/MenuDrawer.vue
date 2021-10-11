@@ -50,8 +50,8 @@
 </template>
 
 <script>
-  import { defineComponent, reactive, ref, toRaw, toRefs } from 'vue'
-  import { mapGetters, mapActions } from 'vuex'
+  import { defineComponent, reactive, ref, toRefs } from 'vue'
+  import { useStore } from 'vuex'
   // 发起请求的方法
   export default defineComponent({
     props: {
@@ -70,6 +70,7 @@
       },
     },
     setup(props) {
+      const store = useStore()
       const formRef = ref()
       // 表单字段
       const formState = reactive({
@@ -160,7 +161,10 @@
               menuData.id = raw_data.value.id
               menuData.level = raw_data.value.level
             }
-            console.log('values', menuData, toRaw(menuData))
+            // 将处理好的数据上传后台保存
+            store.dispatch('auth/menuMange', menuData)
+            store.getters('auth/menuMange')
+            store.getters('auth/menuMange')
             return menuData
           })
           .catch((error) => {
@@ -252,16 +256,9 @@
         console.log(data)
       },
       async onSubmit() {
-        await this.onHandleSubmit()
+        const data = await this.onHandleSubmit()
+        console.log('test_data', data)
       },
-    },
-    computed: {
-      ...mapGetters({
-        routes: 'routes/menuList',
-      }),
-      ...mapActions({
-        menuMange: 'auth/menuMange',
-      }),
     },
   })
 </script>
