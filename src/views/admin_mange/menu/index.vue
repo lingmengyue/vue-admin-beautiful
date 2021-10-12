@@ -29,7 +29,7 @@
           <a-divider type="vertical" v-if="action.level != 3" />
           <a-button type="link" @click="editMenu(action)">修改</a-button>
           <a-divider type="vertical" />
-          <a-button type="link">删除</a-button>
+          <a-button type="link" @click="deleteMenu(action.id)">删除</a-button>
         </span>
       </template>
     </a-table>
@@ -49,9 +49,13 @@
   </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import MenuDrawer from './component/MenuDrawer'
   import VabIcon from '@/layout/vab-icon'
+  import { createVNode } from 'vue'
+  import { Modal } from 'ant-design-vue'
+  import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+  import { menuDelete } from '../../../api/auth'
   // import io from 'socket.io-client'
   const columns = [
     {
@@ -93,6 +97,12 @@
   export default {
     name: 'AdminMangeMenu',
     components: { VabIcon, MenuDrawer },
+    computed: {
+      ...mapGetters({
+        // 获取菜单列表数据
+        routes: 'routes/menuList',
+      }),
+    },
     data() {
       return {
         columns,
@@ -102,17 +112,14 @@
         raw_data: null,
       }
     },
-    computed: {
-      ...mapGetters({
-        // 获取菜单列表数据
-        routes: 'routes/menuList',
-      }),
-    },
     created() {
       this.testSocket()
     },
     methods: {
-      deleteMenu() {},
+      ...mapActions({
+        // 获取菜单列表数据
+        setAllRoutes: 'routes/setAllRoutes',
+      }),
       addMenu(data) {
         if (data instanceof Object) {
           this.raw_data = data
@@ -127,10 +134,27 @@
         this.raw_data = data
         this.menuDrawerStatus = true
       },
+      deleteMenu(menuID) {
+        let self = this
+        Modal.confirm({
+          title: '是否删除此条菜单数据',
+          icon: createVNode(ExclamationCircleOutlined),
+          content: createVNode(
+            'div',
+            { style: 'color:red;' },
+            '当前菜单有子菜单数据时也将一并清除'
+          ),
+          onOk() {
+            // 直接发起删除请求
+            menuDelete({ menuID: menuID }).then(() => {
+              self.setAllRoutes()
+            })
+          },
+        })
+      },
       // 点击关闭menuDrawer
       onClose() {
         this.menuDrawerStatus = false
-        console.log('close_ok')
       },
       testSocket() {},
     },

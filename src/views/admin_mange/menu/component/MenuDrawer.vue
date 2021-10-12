@@ -81,7 +81,6 @@
       })
       const { raw_data } = toRefs(props)
       const { add_status } = toRefs(props)
-
       const extraData = reactive({
         prefix_url: null, // 默认路由前缀，二级菜单启用
         subMenuStatus: false, // 当前是否要进行二级菜单的编辑
@@ -165,8 +164,7 @@
               menuData.level = raw_data.value.level
             }
             // 将处理好的数据上传后台保存
-            store.dispatch('auth/menuMange', menuData).then(function (res) {
-              console.log('res_data', res)
+            store.dispatch('auth/menuMange', menuData).then(function () {
               store.dispatch('routes/setAllRoutes')
               // 触发父组件方法，关闭编辑窗口
               context.emit('onClose')

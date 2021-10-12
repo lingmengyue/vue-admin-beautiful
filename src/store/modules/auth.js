@@ -33,20 +33,20 @@ const mutations = {
 }
 
 const actions = {
-  async menuMange({ state }, menuData) {
-    console.log('menuData', menuData)
-    console.log('state', state)
-    const { data } = await menuMange(menuData)
-    console.log('return data:', data)
-    return 'ok'
-  },
   /**
-   * 删除菜单
-   * @param menuID 菜单ID
-   * @returns {Promise<void>}
+   * 菜单管理，添加与删除
+   * @param state
+   * @param menuData
+   * @returns {Promise<string>}
    */
-  async menuDelete(menuID) {
-    console.log('menuID', menuID)
+  async menuMange({ state }, menuData) {
+    console.log('state', state)
+    await menuMange(menuData)
+  },
+
+  async menuDelete({ state }, menuID) {
+    console.log('vuex menuID', menuID)
+    console.log('state', state)
     // const { data } = await menuMange(menuData)
     // console.log('return data:', data)
   },
