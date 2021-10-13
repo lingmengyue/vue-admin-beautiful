@@ -14,14 +14,23 @@
         />
       </a-form-item>
       <a-form-item label="角色权限" name="role_auth">
-        <a-input
-          v-model:value="this.formState.role_auth"
-          placeholder="输入角色权限"
+        <a-tree
+          checkable
+          :tree-data="routes"
+          v-model:expandedKeys="expandedKeys"
+          v-model:selectedKeys="selectedKeys"
+          v-model:checkedKeys="checkedKeys"
+          :replace-fields="replaceFields"
         />
       </a-form-item>
       <a-form-item label="启用状态" name="status">
-        <a-input v-model:value="this.formState.status" />
+        <a-switch
+          checked-children="开"
+          un-checked-children="关"
+          v-model:checked="this.formState.status"
+        />
       </a-form-item>
+
       <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="onSubmit">保存</a-button>
         <a-button style="margin-left: 10px" @click="initFormState">
@@ -29,13 +38,14 @@
         </a-button>
       </a-form-item>
     </a-form>
-    <div>raw:{{ this.extraData.raw_data }}</div>
+    <!--    <div>raw:{{ this.extraData.raw_data }}</div>-->
   </div>
 </template>
 
 <script>
-  import { defineComponent, reactive, ref, toRaw, toRefs } from 'vue'
+  import { defineComponent, reactive, ref, watch } from 'vue'
   import { mapGetters } from 'vuex'
+  import { roleMange } from '@/api/auth'
   // 发起请求的方法
   import { menuMange } from '@/api/auth'
   export default defineComponent({
@@ -47,19 +57,35 @@
         },
       },
     },
-    setup(props) {
+    computed: {
+      ...mapGetters({
+        routes: 'routes/menuList',
+      }),
+    },
+    setup() {
+      const expandedKeys = ref([])
+      const selectedKeys = ref([])
+      const checkedKeys = ref([])
+      const replaceFields = {
+        title: 'meta_title',
+        key: 'id',
+      }
+      watch(expandedKeys, () => {
+        console.log('expandedKeys', expandedKeys)
+      })
+      watch(selectedKeys, () => {
+        console.log('selectedKeys', selectedKeys)
+      })
+      watch(checkedKeys, () => {
+        console.log('checkedKeys', checkedKeys)
+      })
+
       const formRef = ref()
       // 表单字段
       const formState = reactive({
         role_name: null, //角色名称
         role_auth: null, //角色权限
-        status: null, //角色启用状态
-      })
-      const { raw_data } = toRefs(props)
-      const extraData = reactive({
-        prefix_url: null, // 默认路由前缀，二级菜单启用
-        subMenuStatus: false, // 当前是否要进行二级菜单的编辑
-        raw_data,
+        status: true, //角色启用状态
       })
       // 表单验证规则
       const rules = {
@@ -76,38 +102,13 @@
             trigger: 'blur',
           },
         ],
-        path: [
-          {
-            required: true,
-            message: '请输入访问路径',
-            trigger: 'blur',
-          },
-        ],
-      }
-      // 要传输的菜单数据
-      const menuData = {
-        id: null, // 菜单ID 添加动作id为null 修改动作id有值
-        parentID: 0, // 父菜单ID，默认0 0为一级菜单
-        path: null, // 组件访问路径
-        name: null, // 组件name,一级菜单不填，二级菜单填
-        component: 'Layout', // 用于加载的组件路径
-        componentName: null, // 用于展示用的组件名
-        meta: {
-          title: null, // 菜单标题
-          icon: null, // 菜单icon图标值
-        },
-        redirect: null, // 一级菜单默认重定向地址,目前仅在一级菜单使用
-        alwaysShow: true, // 一级菜单使用，是否展示下属子菜单
       }
       // 提交
       const onSubmit = () => {
         formRef.value
           .validate()
           .then(() => {
-            menuData.meta.icon = formState.meta_icon
-            menuData.meta.title = formState.meta_title
-            menuMange(menuData)
-            console.log('values', menuData, toRaw(menuData))
+            roleMange({ value: checkedKeys.value })
           })
           .catch((error) => {
             console.log('error', error)
@@ -115,12 +116,14 @@
       }
       // 初始化表单字段值
       const initFormState = () => {
-        formState.meta_title = null
-        formState.meta_icon = null
-        formState.path = null
-        formState.name = null
+        formState.role_name = null
+        formState.status = true
       }
       return {
+        expandedKeys,
+        selectedKeys,
+        checkedKeys,
+        replaceFields,
         labelCol: {
           span: 6,
         },
@@ -131,21 +134,13 @@
         formRef,
         formState,
         rules,
-        menuData,
-        extraData,
         onSubmit,
         initFormState,
       }
     },
-    watch: {
-      // 监控传输数据的变化，触发条件：对不同的菜单进行添加或修改动作
-      raw_data(newValue) {
-        this.actionChoice(newValue)
-      },
-    },
     created() {
-      this.actionChoice(this.extraData.raw_data)
-      this.submitTest()
+      console.log('routes', this.routes)
+      this.actionChoice('test')
     },
     methods: {
       // 动作行为选择
@@ -176,11 +171,6 @@
       getSaveData(data) {
         console.log(data)
       },
-    },
-    computed: {
-      ...mapGetters({
-        routes: 'routes/menuList',
-      }),
     },
   })
 </script>

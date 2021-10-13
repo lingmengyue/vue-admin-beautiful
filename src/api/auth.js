@@ -29,3 +29,11 @@ export async function roleList() {
     method: 'get',
   })
 }
+
+export async function roleMange(data) {
+  return request({
+    url: '/auth/roleMange',
+    method: 'post',
+    data,
+  })
+}

@@ -55,7 +55,7 @@
   import { createVNode } from 'vue'
   import { Modal } from 'ant-design-vue'
   import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
-  import { menuDelete } from '../../../api/auth'
+  import { menuDelete } from '@/api/auth'
   // import io from 'socket.io-client'
   const columns = [
     {

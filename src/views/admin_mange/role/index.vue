@@ -26,9 +26,9 @@
         </span>
       </template>
     </a-table>
-    <!-- 菜单管理Drawer -->
+    <!-- 角色管理Drawer -->
     <a-drawer
-      title="create"
+      title="角色"
       :width="720"
       :visible="roleDrawerStatus"
       @close="onClose"
@@ -50,13 +50,13 @@
     },
     {
       title: '角色名称',
-      key: 'icon',
+      key: 'role_name',
       dataIndex: 'role_name',
     },
     {
       title: '角色状态',
-      key: 'icon',
-      dataIndex: 'role_status',
+      key: 'status',
+      dataIndex: 'status',
       width: '10%',
       align: 'center',
       slots: { customRender: 'status' },
@@ -89,7 +89,12 @@
       this.getRoleList()
     },
     methods: {
-      deleteMenu() {},
+      // 获取角色权限表数据
+      async getRoleList() {
+        const { data } = await roleList()
+        this.roleList = data
+        console.log('role_data', this.roleList)
+      },
       addMenu(data) {
         if (data instanceof Object) {
           this.raw_data = data
@@ -108,11 +113,7 @@
       onClose() {
         this.roleDrawerStatus = false
       },
-      async getRoleList() {
-        const { data } = await roleList()
-        this.roleList = data
-        console.log('role_data', this.roleList)
-      },
+
       onChange(checked) {
         console.log(`a-switch to ${checked}`)
       },
