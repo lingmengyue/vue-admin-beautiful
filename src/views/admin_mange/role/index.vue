@@ -20,7 +20,7 @@
       <!-- 动作插件 -->
       <template #action="{ text: action }">
         <span>
-          <a-button type="link" @click="editMenu(action)">修改</a-button>
+          <a-button type="link" @click="editRole(action)">修改</a-button>
           <a-divider type="vertical" />
           <a-button type="link">删除</a-button>
         </span>

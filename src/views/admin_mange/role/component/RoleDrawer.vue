@@ -84,7 +84,7 @@
       // 表单字段
       const formState = reactive({
         role_name: null, //角色名称
-        role_auth: null, //角色权限
+        auth_group: null, //角色权限
         status: true, //角色启用状态
       })
       // 表单验证规则
@@ -108,7 +108,9 @@
         formRef.value
           .validate()
           .then(() => {
-            roleMange({ value: checkedKeys.value })
+            // 将选中的权限值进行赋予
+            formState.auth_group = checkedKeys.value
+            roleMange(formState)
           })
           .catch((error) => {
             console.log('error', error)
