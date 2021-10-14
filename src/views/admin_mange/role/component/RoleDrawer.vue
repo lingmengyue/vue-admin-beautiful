@@ -43,11 +43,9 @@
 </template>
 
 <script>
-  import { defineComponent, reactive, ref, watch } from 'vue'
+  import { defineComponent, reactive, ref, watch, toRefs } from 'vue'
   import { mapGetters } from 'vuex'
   import { roleMange } from '@/api/auth'
-  // 发起请求的方法
-  import { menuMange } from '@/api/auth'
   export default defineComponent({
     props: {
       raw_data: {
@@ -62,14 +60,12 @@
         routes: 'routes/menuList',
       }),
     },
-    setup() {
+    setup(props, context) {
+      // 行数据
+      const { raw_data } = toRefs(props)
       const expandedKeys = ref([])
       const selectedKeys = ref([])
       const checkedKeys = ref([])
-      const replaceFields = {
-        title: 'meta_title',
-        key: 'id',
-      }
       watch(expandedKeys, () => {
         console.log('expandedKeys', expandedKeys)
       })
@@ -79,6 +75,29 @@
       watch(checkedKeys, () => {
         console.log('checkedKeys', checkedKeys)
       })
+      const replaceFields = {
+        title: 'meta_title',
+        key: 'id',
+      }
+      watch(raw_data, () => {
+        actionChoice()
+      })
+
+      // 动作行为选择
+      const actionChoice = async () => {
+        let raw = raw_data.value
+        if (raw) {
+          formState.role_name = raw.role_name
+          formState.status = raw.status ? true : false
+          formState.id = raw.id
+          let selected = await raw.auth_group.split(',').map(Number)
+          expandedKeys.value = selected
+          selectedKeys.value = selected
+          checkedKeys.value = selected
+        } else {
+          initFormState()
+        }
+      }
 
       const formRef = ref()
       // 表单字段
@@ -86,6 +105,7 @@
         role_name: null, //角色名称
         auth_group: null, //角色权限
         status: true, //角色启用状态
+        id: null, // 角色ID
       })
       // 表单验证规则
       const rules = {
@@ -109,8 +129,10 @@
           .validate()
           .then(() => {
             // 将选中的权限值进行赋予
-            formState.auth_group = checkedKeys.value
-            roleMange(formState)
+            formState.auth_group = checkedKeys.value.join(',')
+            roleMange(formState).then(() => {
+              context.emit('onClose')
+            })
           })
           .catch((error) => {
             console.log('error', error)
@@ -120,6 +142,8 @@
       const initFormState = () => {
         formState.role_name = null
         formState.status = true
+        formState.auth_group = null
+        formState.id = null
       }
       return {
         expandedKeys,
@@ -138,41 +162,11 @@
         rules,
         onSubmit,
         initFormState,
+        actionChoice,
       }
     },
     created() {
-      console.log('routes', this.routes)
-      this.actionChoice('test')
-    },
-    methods: {
-      // 动作行为选择
-      actionChoice(data) {
-        console.log('data', data)
-      },
-      editMenu() {
-        // 初始化路由路径前缀，只有添加动作才有这个值
-        this.extraData.prefix_url = null
-        // 给表单字段meta_title赋值
-        this.formState.meta_title = this.extraData.raw_data.meta.title
-        // 给表单字段meta_icon赋值
-        this.formState.meta_icon = this.extraData.raw_data.meta.icon
-        // 给表单字段path赋值
-        this.formState.path = this.extraData.raw_data.path
-        // 判断是否是一级菜单，一级菜单parentID为0 二三级菜单值不为0
-        // 当前菜单不为一级菜单时
-        if (this.raw_data.parentID) {
-          // 设置子菜单状态为true 展示name字段
-          this.extraData.subMenuStatus = true
-          // 给表单字段name赋值
-          this.formState.name = this.extraData.raw_data.name
-        }
-      },
-      async submitTest() {
-        await menuMange(this.routes)
-      },
-      getSaveData(data) {
-        console.log(data)
-      },
+      this.actionChoice()
     },
   })
 </script>

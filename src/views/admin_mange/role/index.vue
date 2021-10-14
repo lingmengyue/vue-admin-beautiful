@@ -1,6 +1,6 @@
 <template>
   <div class="index-container">
-    <a-button type="primary" class="first_menu" @click="addMenu(null)">
+    <a-button type="primary" class="first_menu" @click="addRole(null)">
       添加角色
     </a-button>
     <a-table
@@ -22,7 +22,7 @@
         <span>
           <a-button type="link" @click="editRole(action)">修改</a-button>
           <a-divider type="vertical" />
-          <a-button type="link">删除</a-button>
+          <a-button type="link" @click="deleteRole(action.id)">删除</a-button>
         </span>
       </template>
     </a-table>
@@ -33,7 +33,7 @@
       :visible="roleDrawerStatus"
       @close="onClose"
     >
-      <role-drawer :raw_data="this.raw_data"></role-drawer>
+      <role-drawer :raw_data="this.raw_data" @onClose="onClose"></role-drawer>
     </a-drawer>
   </div>
 </template>
@@ -42,6 +42,11 @@
   import { mapGetters } from 'vuex'
   import { roleList } from '@/api/auth'
   import RoleDrawer from './component/RoleDrawer'
+  import { Modal } from 'ant-design-vue'
+  import { createVNode } from 'vue'
+  import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
+  import { roleDelete } from '@/api/auth'
+
   const columns = [
     {
       title: 'ID',
@@ -75,7 +80,6 @@
       return {
         columns,
         roleDrawerStatus: false,
-        addStatus: true,
         raw_data: null,
         roleList: null,
       }
@@ -93,29 +97,39 @@
       async getRoleList() {
         const { data } = await roleList()
         this.roleList = data
-        console.log('role_data', this.roleList)
       },
-      addMenu(data) {
+      // 增加角色
+      addRole(data) {
         if (data instanceof Object) {
           this.raw_data = data
         } else {
           this.raw_data = null
         }
-        this.addStatus = true
         this.roleDrawerStatus = true
       },
-      editMenu(data) {
-        this.addStatus = false
+      // 修改角色
+      editRole(data) {
         this.raw_data = data
         this.roleDrawerStatus = true
       },
       // 点击关闭menuDrawer
       onClose() {
         this.roleDrawerStatus = false
+        this.getRoleList()
       },
-
-      onChange(checked) {
-        console.log(`a-switch to ${checked}`)
+      // 删除角色
+      deleteRole(roleID) {
+        let self = this
+        Modal.confirm({
+          title: '是否删除此条角色数据',
+          icon: createVNode(ExclamationCircleOutlined),
+          onOk() {
+            // 直接发起删除请求
+            roleDelete({ roleID: roleID }).then(() => {
+              self.getRoleList()
+            })
+          },
+        })
       },
     },
   }

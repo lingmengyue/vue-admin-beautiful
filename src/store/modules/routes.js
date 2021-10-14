@@ -47,7 +47,6 @@ const actions = {
   async setAllRoutes({ commit }) {
     // 获取路由数据 mock模式下在路由数据@/mock/controller/router.js
     // 发起对应接口文件路径在@api/router.js
-    console.log('setAllRoutes_in')
     let { data } = await getRouterList()
     commit('setMenuList', data)
     // if (data[data.length - 1].path !== '*')

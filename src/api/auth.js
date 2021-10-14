@@ -23,6 +23,14 @@ export async function menuDelete(data) {
   })
 }
 
+export async function roleMange(data) {
+  return request({
+    url: '/auth/roleMange',
+    method: 'post',
+    data,
+  })
+}
+
 export async function roleList() {
   return request({
     url: '/auth/roleList',
@@ -30,9 +38,9 @@ export async function roleList() {
   })
 }
 
-export async function roleMange(data) {
+export async function roleDelete(data) {
   return request({
-    url: '/auth/roleMange',
+    url: '/auth/roleDelete',
     method: 'post',
     data,
   })
