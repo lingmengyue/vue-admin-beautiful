@@ -45,3 +45,26 @@ export async function roleDelete(data) {
     data,
   })
 }
+
+export async function adminMange(data) {
+  return request({
+    url: '/auth/adminMange',
+    method: 'post',
+    data,
+  })
+}
+
+export async function adminList() {
+  return request({
+    url: '/auth/adminList',
+    method: 'get',
+  })
+}
+
+export async function adminDelete(data) {
+  return request({
+    url: '/auth/adminDelete',
+    method: 'post',
+    data,
+  })
+}
